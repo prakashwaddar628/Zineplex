@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Great+Vibes&family=Pacifico&family=Playwrite+AU+QLD:wght@100..400&family=Playwrite+PL:wght@322&display=swap');
+
+.great-vibes-regular {
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
