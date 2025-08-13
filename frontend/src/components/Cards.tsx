@@ -1,66 +1,44 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
-interface Card {
+interface CardItem {
   id: number;
   title: string;
-  description: string;
-  image: string;
+  posterUrl: string;
   year: number;
+  linkPath?: string; 
 }
 
-const Cards = () => {
-  const cardData: Card[] = [
-    {
-      id: 1,
-      title: 'Card 1',
-      description: 'Description for Card 1',
-      image: 'https://images.unsplash.com/photo-1518779578993-ec3579dfef79',
-      year: 2021,
-    },
-    {
-      id: 2,
-      title: 'Card 2',
-      description: 'Description for Card 2',
-      image: 'https://images.unsplash.com/photo-1542204165-65bf26472b9b',
-      year: 2022,
-    },
-    {
-      id: 3,
-      title: 'Card 3',
-      description: 'Description for Card 3',
-      image: 'https://images.unsplash.com/photo-1517409241551-b0e77d54b455',
-      year: 2023,
-    },
-    {
-      id: 4,
-      title: 'Card 4',
-      description: 'Description for Card 4',
-      image: 'https://images.unsplash.com/photo-1522896561-12c858564f58',
-      year: 2024,
-    },
-  ];
+const Cards = ({ items }: { items: CardItem[] }) => {
+  if (!items || items.length === 0) {
+    return <div className="text-center text-lg text-gray-400 p-8">No items found.</div>;
+  }
 
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
-      {cardData.map((card) => (
-        <div key={card.id} className='bg-gray-800 rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300'>
-          {/* Using Next.js Image for optimization */}
-          <div className="relative w-full h-64">
-            <Image
-              src={card.image} 
-              alt={card.title}
-              fill
-              style={{ objectFit: 'cover' }}
-              quality={80}
-            />
+    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4'>
+      {items.map((item) => (
+        <Link 
+          href={item.linkPath || `/movies/${item.id}`} 
+          key={item.id} 
+          passHref
+        >
+          <div className='bg-gray-800 rounded-lg shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-300'>
+            <div className="relative w-full h-48 sm:h-64">
+              <Image
+                src={item.posterUrl} 
+                alt={item.title}
+                fill
+                style={{ objectFit: 'cover' }}
+                quality={80}
+              />
+            </div>
+            <div className='p-4'>
+              <h2 className='text-md font-bold text-white whitespace-nowrap overflow-hidden text-overflow-ellipsis'>{item.title}</h2>
+              <p className='text-gray-400 text-sm mt-1'>({item.year})</p>
+            </div>
           </div>
-          <div className='p-4'>
-            <h2 className='text-lg font-bold text-white'>{card.title}</h2>
-            <p className='text-gray-400'>{card.description}</p>
-            <p className='text-gray-500 text-sm mt-2'>Year: {card.year}</p>
-          </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
