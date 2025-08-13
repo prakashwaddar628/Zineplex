@@ -11,6 +11,10 @@ type Movie = {
   id: number;
   title: string;
   posterUrl: string;
+  year: number;
+  type: 'movies' | 'anime' | 'drama' | 'kids';
+  description?: string;
+  rating?: number;
 };
 
 const Movies = () => {
@@ -26,7 +30,10 @@ const Movies = () => {
           throw new Error('Failed to fetch movies');
         }
         const data: Movie[] = await response.json();
-        setMovies(data);
+        setMovies(data.map(movie => ({
+          ...movie,
+          type: 'movies'
+        })));
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -76,7 +83,6 @@ const Movies = () => {
                     </span>
                   </Link>
                 </div>
-
                 <Cards items={newlyAddedMovies} />
               </section>
 
@@ -89,7 +95,6 @@ const Movies = () => {
                     </span>
                   </Link>
                 </div>
-                {/* Pass the data to the Cards component */}
                 <Cards items={trendingMovies} />
               </section>
 
@@ -102,7 +107,6 @@ const Movies = () => {
                     </span>
                   </Link>
                 </div>
-                {/* Pass the data to the Cards component */}
                 <Cards items={topRatedMovies} />
               </section>
             </>

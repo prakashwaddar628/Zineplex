@@ -5,17 +5,17 @@ export async function GET(request: Request) {
     const movies = [
       {
         id: 1,
-        title: 'The Matrix',
-        director: 'Lana Wachowski, Lilly Wachowski',
-        year: 1999,
-        posterUrl: 'https://image.tmdb.org/t/p/w500/f8sOq4R2c040L96LhS4J2yqA31Z.jpg',
+        title: 'Su From So',
+        director: 'J. P. Thuminad',
+        year: 2025,
+        posterUrl: '/assets/Su_From_So.jpg',
       },
       {
         id: 2,
-        title: 'Inception',
-        director: 'Christopher Nolan',
-        year: 2010,
-        posterUrl: 'https://image.tmdb.org/t/p/w500/9gk7adHYeZ3w1n7qG3d8wK00010.jpg',
+        title: 'Fast X',
+        director: 'Louis Leterrier[',
+        year: 2023,
+        posterUrl: 'https://imgs.search.brave.com/9Ydc-H1jL2DVeAk0Ojl9n1uDijMoh2ybkAEc0z0_Y20/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvZW4vZi9mMi9G/YXN0X1hfcG9zdGVy/LmpwZw',
       },
       // Add more movies as needed
     ];
