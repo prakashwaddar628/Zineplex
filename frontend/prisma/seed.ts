@@ -1,48 +1,103 @@
+// prisma/seed.ts
 import { PrismaClient } from "@prisma/client";
-import axios from "axios";
+import https from "https";
 
 const prisma = new PrismaClient();
-
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
-async function main() {
+const agent = new https.Agent({ keepAlive: false });
+
+async function fetchWithRetry(url: string, options: any, retries = 3): Promise<Response> {
+  let lastError: any;
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fetch(url, { ...options, agent });
+    } catch (err) {
+      lastError = err;
+      console.warn(`Fetch attempt ${i + 1} failed. Retrying...`);
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  throw lastError;
+}
+
+function buildTMDbRequest(endpoint: string) {
   if (!TMDB_API_KEY) {
-    console.error("TMDB_API_KEY is not set in the environment variables.");
-    return;
+    throw new Error("TMDB_API_KEY is not set in .env");
   }
 
-  try {
-    // 1. fetch the data from tmdb
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}`
-    );
-    const movies = response.data.results;
-    console.log(`Fetched ${movies.length} movies from TMDB.`);
-
-    // 2. Clear existing data to prevent duplicates on re-seeding
-    await prisma.movie.deleteMany();
-    console.log(`Deleted all movies from the database.`);
-
-    // 3. Create a transaction to save the movies in the database
-    const movieCreatePromises = movies.map((movie: any)=>{
-        return prisma.movie.create({
-            data: {
-          id: movie.id,
-          title: movie.title,
-          posterUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          year: new Date(movie.release_date).getFullYear(),
-          type: 'movies',
-          description: movie.overview,
-          rating: movie.vote_average,
+  const isBearerToken = TMDB_API_KEY.startsWith("eyJ"); // JWT tokens always start with eyJ
+  if (isBearerToken) {
+    return {
+      url: `https://api.themoviedb.org/3/${endpoint}`,
+      options: {
+        headers: {
+          Authorization: `Bearer ${TMDB_API_KEY}`,
+          "Content-Type": "application/json",
         },
-        });
-    });
+      },
+    };
+  } else {
+    return {
+      url: `https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}`,
+      options: {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    };
+  }
+}
 
-    await prisma.$transaction(movieCreatePromises);
-    console.log(`Seeded ${movies.length} movies into the database.`);
+async function main() {
+  try {
+    console.log("Attempting to fetch data from TMDb...");
+
+    const { url, options } = buildTMDbRequest("movie/popular");
+
+    const response = await fetchWithRetry(url, options);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch TMDb. Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const movies = data.results;
+
+    if (!movies || movies.length === 0) {
+      throw new Error("No movies returned from TMDb.");
+    }
+
+    console.log(`Fetched ${movies.length} movies. Clearing DB...`);
+    await prisma.movie.deleteMany();
+
+    console.log("Seeding database...");
+    await prisma.$transaction(
+      movies.map((movie: any) =>
+        prisma.movie.create({
+          data: {
+            id: movie.id,
+            title: movie.title,
+            posterUrl: movie.poster_path
+              ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+              : null,
+            year: movie.release_date
+              ? new Date(movie.release_date).getFullYear()
+              : 0,
+            type: "movies",
+            description: movie.overview || "No description available.",
+            rating: movie.vote_average || 0.0,
+          },
+        })
+      )
+    );
+
+    console.log("Database has been successfully seeded!");
   } catch (error) {
-    console.error("Error seeding the database:", error);
+    console.error("A critical error occurred during the seeding process:", error);
   } finally {
     await prisma.$disconnect();
   }
 }
+
+main();

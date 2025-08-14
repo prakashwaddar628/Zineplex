@@ -18,8 +18,8 @@ datasource db {
 model Movie {
   id          Int      @id @default(autoincrement())
   title       String
-  posterUrl   String
-  year        Int
+  posterUrl   String?
+  year        Int?
   type        String
   description String?
   rating      Float?
@@ -30,8 +30,8 @@ model Movie {
 model Anime {
   id          Int      @id @default(autoincrement())
   title       String
-  posterUrl   String
-  year        Int
+  posterUrl   String?
+  year        Int?
   type        String
   description String?
   rating      Float?
@@ -42,8 +42,8 @@ model Anime {
 model Drama {
   id          Int      @id @default(autoincrement())
   title       String
-  posterUrl   String
-  year        Int
+  posterUrl   String?
+  year        Int?
   type        String
   description String?
   rating      Float?
@@ -54,8 +54,8 @@ model Drama {
 model Kids {
   id          Int      @id @default(autoincrement())
   title       String
-  posterUrl   String
-  year        Int
+  posterUrl   String?
+  year        Int?
   type        String
   description String?
   rating      Float?
