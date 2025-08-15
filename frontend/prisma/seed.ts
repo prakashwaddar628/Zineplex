@@ -82,10 +82,11 @@ async function main() {
               : null,
             year: movie.release_date
               ? new Date(movie.release_date).getFullYear()
-              : 0,
+              : null, // Year is now nullable
             type: "movies",
             description: movie.overview || "No description available.",
             rating: movie.vote_average || 0.0,
+            videoUrl: 'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_stereo.mp4',
           },
         })
       )
