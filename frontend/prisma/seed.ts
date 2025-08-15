@@ -1,4 +1,3 @@
-// prisma/seed.ts
 import { PrismaClient } from "@prisma/client";
 import https from "https";
 
@@ -26,7 +25,7 @@ function buildTMDbRequest(endpoint: string) {
     throw new Error("TMDB_API_KEY is not set in .env");
   }
 
-  const isBearerToken = TMDB_API_KEY.startsWith("eyJ"); // JWT tokens always start with eyJ
+  const isBearerToken = TMDB_API_KEY.startsWith("eyJ");
   if (isBearerToken) {
     return {
       url: `https://api.themoviedb.org/3/${endpoint}`,
