@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// npx prisma migrate dev --name add_video_url_to_movie
+
 // prisma/schema.prisma
 
 generator client {
@@ -23,6 +25,7 @@ model Movie {
   type        String
   description String?
   rating      Float?
+  videoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -35,6 +38,7 @@ model Anime {
   type        String
   description String?
   rating      Float?
+  videoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -47,6 +51,7 @@ model Drama {
   type        String
   description String?
   rating      Float?
+  videoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -59,6 +64,7 @@ model Kids {
   type        String
   description String?
   rating      Float?
+  videoUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

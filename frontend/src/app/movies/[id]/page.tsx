@@ -10,7 +10,7 @@ type Movie = {
   id: number;
   title: string;
   posterUrl: string | null;
-  year: number;
+  year: number | null; // Changed to be nullable to match schema
   type: "movies" | "anime" | "drama" | "kids";
   description: string | null;
   rating: number | null;
@@ -31,12 +31,11 @@ const MovieDetailPage = () => {
       setLoading(true);
       try {
         const response = await fetch(`/api/movies/${movieId}`);
-        if (response.ok) {
-          const data: Movie = await response.json();
-          setMovie(data);
-        } else {
+        if (!response.ok) {
           throw new Error("Failed to fetch movie");
         }
+        const data: Movie = await response.json();
+        setMovie(data);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -64,6 +63,11 @@ const MovieDetailPage = () => {
     return <div className="text-center text-xl mt-20">Movie not found.</div>;
   }
 
+  const handleWatchNowClick = () => {
+    alert(`You're about to watch: ${movie.title}`);
+    // Here we will add the logic to show a video player.
+  };
+
   return (
     <div className="relative flex flex-col min-h-screen bg-gray-900 text-white">
       <Navbar />
@@ -90,7 +94,10 @@ const MovieDetailPage = () => {
               Rating: {movie.rating?.toFixed(1)} / 10
             </p>
             <p className="text-lg mb-6">{movie.description}</p>
-            <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition">
+            <button
+              onClick={handleWatchNowClick}
+              className="mt-4 px-4 py-2 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition"
+            >
               Watch Now
             </button>
           </div>
