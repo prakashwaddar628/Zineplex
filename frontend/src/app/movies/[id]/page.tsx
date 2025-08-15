@@ -67,7 +67,7 @@ const MovieDetailPage = () => {
   return (
     <div className="relative flex flex-col min-h-screen bg-gray-900 text-white">
       <Navbar />
-      <main className="flex-grow pt-16 p-8">
+      <main className="flex-grow pt-16 p-8 mt-8">
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-8">
           <div className="relative w-64 h-96 flex-shrink-0">
             <Image
@@ -90,6 +90,9 @@ const MovieDetailPage = () => {
               Rating: {movie.rating?.toFixed(1)} / 10
             </p>
             <p className="text-lg mb-6">{movie.description}</p>
+            <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 transition">
+              Watch Now
+            </button>
           </div>
         </div>
       </main>

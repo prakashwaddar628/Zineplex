@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+// Updated CardItem interface with more properties and a content type
 interface CardItem {
   id: number;
   title: string;
@@ -17,11 +18,12 @@ const Cards = ({ items }: { items: CardItem[] }) => {
     return <div className="text-center text-lg text-gray-400 p-8">No items found.</div>;
   }
 
-  const FALLBACK_IMAGE_URL = '/assets/kids.jpg';
+  const FALLBACK_IMAGE_URL = 'https://via.placeholder.com/250x375.png?text=No+Image';
 
   return (
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4'>
       {items.map((item) => (
+        // The Link now uses a dynamic path from the item's type and id
         <Link 
           href={`/${item.type}/${item.id}`}
           key={item.id} 
