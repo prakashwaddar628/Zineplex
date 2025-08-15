@@ -86,7 +86,7 @@ async function main() {
             type: "movies",
             description: movie.overview || "No description available.",
             rating: movie.vote_average || 0.0,
-            videoUrl: 'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_stereo.mp4',
+            videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
           },
         })
       )
